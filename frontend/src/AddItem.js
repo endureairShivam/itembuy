@@ -1,11 +1,7 @@
 import React, { useContext, useState } from "react";
-import { Container, Button, Dialog,Typography, TextField, IconButton } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-
-import DialogTitle from '@mui/material/DialogTitle';
+import { Container, Button} from "@mui/material";
 import { DataContext } from "./DataProvider";
+import DialogComponent from "./DialogComponent";
 
 function AddItem(){
 
@@ -71,38 +67,9 @@ function AddItem(){
             <Button variant="contained" onClick={handleClickOpen}>
                 Add Item
             </Button>
-            {open &&
-                    <Dialog open={open} onClose={handleClickClose}>
-
-                    <DialogTitle>
-                            {"Add the details for new Item."}
-                            <IconButton
-                                aria-label="close"
-                                onClick={handleClickClose}
-                                sx={{
-                                    position: 'absolute',
-                                    right: 8,
-                                    top: 8,
-                                }}
-                            >
-                                <CloseIcon />
-                            </IconButton>
-                        </DialogTitle>
-                        <DialogContent>
-                            <TextField required autoFocus name="name" label="Name" type="text" fullWidth variant="outlined" value={formData.name} onChange={handleOnChange} sx={{marginBottom:'3vh', marginTop:'3vh'}}/>
-                            <TextField  required name="price" label="Price" type="number" fullWidth variant="outlined" value={formData.price} onChange={handleOnChange} sx={{marginBottom:'3vh'}}/>
-                            <TextField  required name="quantity" label="Quantity" type="number" fullWidth variant="outlined" value={formData.quantity} onChange={handleOnChange} sx={{marginBottom:'3vh'}}/>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button variant="contained" type="button" onClick={handleSubmit}>
-                                Submit
-                            </Button>
-                            
-                        </DialogActions>
-                    </Dialog>
-                }
+            <DialogComponent formData={formData} handleClickClose={handleClickClose} handleOnChange={handleOnChange} handleSubmit={handleSubmit} handleClickOpen={handleClickOpen} open={open} itemText={"Add the details for new item."}/>
         </Container>
     )
 }
 
-export default AddItem
+export default React.memo(AddItem);

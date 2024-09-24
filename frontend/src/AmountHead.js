@@ -7,7 +7,7 @@ function AmountHead(){
     const {amount}= useContext(DataContext);
     const currentAmount = useMemo(()=>{return amount},[amount]);
     return(
-        <Container maxWidth="sm" sx={{display:'flex',justifyContent:"center",alignContent:'cetner', alignItems:'center',marginBottom:'3vh',marginTop:'3vh'}}>
+        <Container sx={{display:'flex',justifyContent:"center",alignContent:'cetner', alignItems:'center',marginBottom:'3vh',marginTop:'3vh'}}>
             <Typography variant="h6">
                 Total Amount:{currentAmount}
             </Typography>
@@ -15,4 +15,4 @@ function AmountHead(){
     )
 }
 
-export default AmountHead;
+export default React.memo(AmountHead);

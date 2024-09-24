@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Container, List, ListItem, ListItemText, Paper, Typography, Button, ListItemAvatar, Avatar, DialogActions, DialogContent, TextField, IconButton, Dialog, DialogTitle } from "@mui/material";
+import { Container, List, ListItem, ListItemText, Paper, Typography, Button, ListItemAvatar, Avatar } from "@mui/material";
 import { DataContext } from "./DataProvider";
-import CloseIcon from '@mui/icons-material/Close';
+import DialogComponent from "./DialogComponent";
 
 const imageurl = "https://foodish-api.com/api/images/";
 
 function ItemList() {
     const { items, setItems, amount, setAmount } = useContext(DataContext);
     const [imageUrls, setImageUrls] = useState({});
-    const [selecteditem, setSelecteditem] = useState(null);
     const [editform, setEditForm] = useState({ name: '', price: 0, quantity: 0,id:0 ,available:false});
     const [open, setOpen] = useState(false);
 
@@ -22,13 +21,11 @@ function ItemList() {
 
     const handleClickOpen = (item) => {
         console.log(item);
-        setSelecteditem(item);
         setEditForm({ name: item.name, price: item.price, quantity: item.quantity,id:item.id ,available:item.available});  // Sync editform with selected item
         setOpen(true);
     };
 
     const handleClose = () => {
-        setSelecteditem(null);
         setOpen(false);
     };
 
@@ -137,11 +134,11 @@ function ItemList() {
     }
 
     return (
-        <Container maxWidth="md" sx={{ maxheight: '100%', minHeight: '40%' }}>
-            <Paper elevation={3} maxHeight='lg' maxWidth='md' sx={{ height: '100%', display: 'flex' }}>
+        <Container maxwidth="md" sx={{ maxheight: '100%', minheight: '40%' }}>
+            <Paper elevation={3}  maxwidth='md' sx={{ height: '100%', display: 'flex' }}>
                 <List sx={{ display: 'flex', flexWrap: 'wrap', gap: 10, padding: '3vh', height: '100%', width: '100%', paddingLeft: '5%' }}>
                     {items.map(item => (
-                        <Paper key={item.id} elevation={2} maxHeight={'90%'} maxWidth={'90%'} sx={{ height: '50%', width: '43%', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2v' }}>
+                        <Paper key={item.id} elevation={2} maxheight={'90%'} maxwidth={'90%'} sx={{ height: '50%', width: '43%', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2v' }}>
                             <ListItem sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                 <ListItemAvatar>
                                     <Avatar src={imageUrls[item.id] || ""} />
@@ -158,37 +155,14 @@ function ItemList() {
                                     </Button>
                                     <Button variant="contained" onClick={()=>deleteItem(item)}>Delete</Button>
                                 </Container>
-                                {open &&<Dialog open={open} onClose={handleClose} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <DialogTitle>
-                                        {"Edit the details for the item."}
-                                        <IconButton
-                                            aria-label="close"
-                                            onClick={handleClose}
-                                            sx={{
-                                                position: 'absolute',
-                                                right: 8,
-                                                top: 8,
-                                            }}
-                                        >
-                                            <CloseIcon />
-                                        </IconButton>
-                                    </DialogTitle>
-                                    <DialogContent>
-                                        <TextField required autoFocus name="name" label="Name" type="text" fullWidth variant="outlined" value={editform.name} onChange={handleOnChange} sx={{ marginBottom: '3vh', marginTop: '3vh' }} />
-                                        <TextField required name="price" label="Price" type="number" fullWidth variant="outlined" value={editform.price} onChange={handleOnChange} sx={{ marginBottom: '3vh' }} />
-                                        <TextField required name="quantity" label="Quantity" type="number" fullWidth variant="outlined" value={editform.quantity} onChange={handleOnChange} sx={{ marginBottom: '3vh' }} />
-                                    </DialogContent>
-                                    <DialogActions>
-                                        <Button variant="contained" type="button" onClick={handleEditSubmit}>Submit</Button>
-                                    </DialogActions>
-                                </Dialog>}
                             </ListItem>
                         </Paper>
                     ))}
                 </List>
+                <DialogComponent open={open} handleClickClose={handleClose} handleOnChange={handleOnChange} handleSubmit={handleEditSubmit} formData={editform}itemText={"Add the details to edit the data."}/>
             </Paper>
         </Container>
     );
 }
 
-export default ItemList;
+export default React.memo(ItemList);

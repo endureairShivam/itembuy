@@ -26,10 +26,10 @@ function GetData(){
     }
 
     return(
-        <Container maxWidth="sm" sx={{display:'flex',justifyContent:'center',alignItems:'center',my:2}}>
+        <Container sx={{display:'flex',justifyContent:'center',alignItems:'center',my:2}}>
             <Button variant="contained" type="button" onClick={handleGetData}>Get Data</Button>
         </Container>
     )
 }
 
-export default GetData;
+export default React.memo(GetData);
