@@ -65,9 +65,45 @@ app.post('/additem',(req,res)=>{
     }
 })
 
+app.put('/edititem',(req,res)=>{
+    const itemId = req.body.id;
+    const index = items.findIndex(item => item.id === itemId);
+    if(index !== -1)
+    {
+        const updateditem={    
+            id:itemId,
+            name:req.body.name,
+            quantity:req.body.quantity,
+            price:req.body.price,
+            available:req.body.available
+        }
+
+        items[index]=updateditem;
+        console.log(items);
+        res.status(200).json({message:"Successfully updated items.",updateditem})
+    }
+    else{
+        res.status(401).json({message:"Item not found."})
+    }
+})
+app.delete('/deleteitem/:id',(req,res)=>{
+    console.log('delete called.')
+    console.log(req.params.id);
+    const itemid=parseInt(req.params.id);
+    const index = items.findIndex(item => item.id ===itemid);
+    console.log(index);
+    if(index!==-1)
+    {
+        items.splice(index,1);
+        res.status(200).json({message:'Item deleted successfully'});
+    }
+    else{
+        res.status(401).json({message:'Item not found'});
+    }
+})
 
 
-port=8080;
+const port=8080;
 app.listen(port,()=>{
     console.log('App is listening.');
 })
