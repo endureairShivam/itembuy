@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import { Container, Button} from "@mui/material";
 import { DataContext } from "./DataProvider";
 import DialogComponent from "./DialogComponent";
@@ -7,27 +7,29 @@ function AddItem(){
 
     const [open,setOpen]= useState(false);
 
-    const [formData,setFormData]=useState({
+    const initialFormData=useMemo(()=>({
         name:'',
         quantity:0,
         price:0
-    })
+    }),[])
+    const [formData,setFormData]=useState({initialFormData});
+
     const {items,setItems} = useContext(DataContext);
 
 
-    const handleClickOpen = () => {
+    const handleClickOpen = useCallback(() => {
         setOpen(true);
-    };
+    },[]);
     
-    const handleClickClose = () => {
+    const handleClickClose = useCallback(() => {
         setOpen(false);
-    };
+    },[]);
 
-    const handleOnChange = (event) => {
-        setFormData({ ...formData, [event.target.name]: event.target.value });
-    };
+    const handleOnChange = useCallback((event) => {
+        setFormData((prevData)=>({...prevData,[event.target.name]:event.target.value}));
+    },[]);
 
-    const handleSubmit = async () => {
+    const handleSubmit = useCallback( async () => {
         console.log('Submitting data:', formData);
         if(formData.name.length===0 && formData.price.length===0 && formData.quantity.length===0)
         {
@@ -47,9 +49,8 @@ function AddItem(){
             console.log(newItem.newItem);
             console.log(items);
             if (response.ok) {
-                setItems((prevItems) => [...prevItems, newItem.newItem]); // Add the new item to the existing items
-            } else {
-                alert(newItem.message); // Display the error message from the server
+                setItems((prevItems) => [...prevItems, newItem.newItem]);
+                alert(newItem.message); 
             }
 
             
@@ -58,8 +59,8 @@ function AddItem(){
             alert(error);
         }
 
-        handleClickClose(); // Optionally close the dialog after submission
-    };
+        handleClickClose(); 
+    },[formData,setItems,handleClickClose]);
 
 
     return(
