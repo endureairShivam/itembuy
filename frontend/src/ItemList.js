@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Container, List, ListItem, ListItemText, Paper, Typography, Button, ListItemAvatar, Avatar } from "@mui/material";
 import { DataContext } from "./DataProvider";
 import DialogComponent from "./DialogComponent";
@@ -11,28 +11,28 @@ function ItemList() {
     const [editform, setEditForm] = useState({ name: '', price: 0, quantity: 0,id:0 ,available:false});
     const [open, setOpen] = useState(false);
 
-    const fetchImage = async (name) => {
+    const fetchImage =useCallback( async (name) => {
         const newname = name.toLowerCase();
         const res = await fetch(imageurl + newname + '/');
         const data = await res.json();
         console.log(data.image);
         return data.image;
-    };
+    },[]);
 
-    const handleClickOpen = (item) => {
+    const handleClickOpen =useCallback( (item) => {
         console.log(item);
         setEditForm({ name: item.name, price: item.price, quantity: item.quantity,id:item.id ,available:item.available});  // Sync editform with selected item
         setOpen(true);
-    };
+    },[]);
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         setOpen(false);
-    };
+    },[]);
 
-    const handleOnChange = (event) => {
+    const handleOnChange = useCallback( (event) => {
         console.log(event.target.value);
         setEditForm({ ...editform, [event.target.name]: event.target.value });
-    };
+    },[]);
     const handleEditSubmit= async (event)=>{
         console.log(editform);
         try{
@@ -73,7 +73,7 @@ function ItemList() {
                 }
                 setImageUrls(urls); 
             };
-            fetchAllImages();
+            if(items.length>0) fetchAllImages();
         }
         return () => {
             isMounted = false;
